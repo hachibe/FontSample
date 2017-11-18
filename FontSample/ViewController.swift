@@ -10,24 +10,14 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var title1: UILabel!
-    @IBOutlet weak var title2: UILabel!
-    @IBOutlet weak var title3: UILabel!
-    @IBOutlet weak var headline: UILabel!
-    @IBOutlet weak var subheadline: UILabel!
-    @IBOutlet weak var body: UILabel!
-    @IBOutlet weak var callout: UILabel!
-    @IBOutlet weak var footnote: UILabel!
-    @IBOutlet weak var caption1: UILabel!
-    @IBOutlet weak var caption2: UILabel!
-    
+    @IBOutlet weak var textField: UITextField!
     @IBOutlet var labels: [UILabel]!
-    var texts = [UILabel: String]()
+    var defaultStrings = [UILabel: String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         for label in labels {
-            texts[label] = label.text
+            defaultStrings[label] = label.text
         }
         update()
     }
@@ -42,7 +32,26 @@ class ViewController: UIViewController {
     
     private func update() {
         for label in labels {
-            label.text = texts[label]! + ": \(label.font.pointSize)"
+            if let inputText = textField.text, !inputText.isEmpty {
+                label.text = inputText + ": \(label.font.pointSize)"
+            } else {
+                label.text = defaultStrings[label]! + ": \(label.font.pointSize)"
+            }
         }
+    }
+}
+
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        textField.text = ""
+        update()
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        update()
+        textField.resignFirstResponder()
+        return true
     }
 }
